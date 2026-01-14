@@ -134,9 +134,22 @@
         </div>
 
         <div class="table-responsive table-wrapper">
+            <form id="exportForm" method="POST" action="{{ route("barang.exportall") }}">
+                @csrf
+                <input type="hidden" name="ids" id="exportIds">
+
+                <button type="button" id="exportExcel" class="btn btn-success mb-2">
+                    <i class="bi bi-file-earmark-excel"></i> Export Excel
+                </button>
+            </form>
+
+
             <table id="barangTable" class="table-striped table-hover table text-nowrap align-middle" style="width:100%" wire:ignore>
                 <thead class="bg-primary text-white">
                     <tr>
+                        <th class="text-center">
+                            <input type="checkbox" id="checkAll">
+                        </th>
                         <th>Barang</th>
                         <th>Deskripsi</th>
                         <th>Gambar</th>
@@ -149,6 +162,10 @@
                 <tbody>
                     @foreach ($barangs as $barang)
                         <tr>
+                            <td class="text-center">
+                                <input type="checkbox" class="row-check" value="{{ $barang->id }}">
+                            </td>
+
                             {{-- BARANG --}}
                             <td>
                                 <div class="fw-semibold">{{ $barang->nama_barang }}</div>
@@ -233,16 +250,15 @@
                 $('#barangTable').DataTable().destroy();
             }
 
-            $('#barangTable').DataTable({
+            const table = $('#barangTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 lengthChange: false,
                 searching: true,
                 paging: true,
                 info: true,
-
+                ordering: false,
                 dom: 'ftrip',
-
                 language: {
                     search: "Cari Barang:",
                     zeroRecords: "Barang tidak ditemukan",
@@ -255,8 +271,34 @@
                 }
             });
 
+            // ✅ CHECK ALL
+            $('#checkAll').on('click', function() {
+                $('.row-check').prop('checked', this.checked);
+            });
+
+            // ✅ EXPORT EXCEL
+            $('#exportExcel').on('click', function() {
+                let ids = [];
+
+                $('.row-check:checked').each(function() {
+                    ids.push($(this).val());
+                });
+
+                if (ids.length === 0) {
+                    alert('Pilih minimal 1 barang');
+                    return;
+                }
+
+                // kirim sebagai JSON string
+                $('#exportIds').val(JSON.stringify(ids));
+
+                // submit form
+                $('#exportForm').submit();
+            });
+
         });
     </script>
+
 
     <script>
         document.addEventListener('livewire:init', () => {

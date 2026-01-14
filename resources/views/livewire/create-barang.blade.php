@@ -11,55 +11,124 @@
             </div>
         </a>
 
-        <div class="py-md-4 container py-0">
-            <form wire:submit.prevent="submit" enctype="multipart/form-data">
+        @if (!$barcodePreview)
+            <div class="py-md-4 container py-0">
+                <form wire:submit.prevent="submit" enctype="multipart/form-data">
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Stock Code" wire:model="stock_code" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="stock_code" class="form-label">Stock Code</label>
+                        <input type="text" id="stock_code" class="form-control" wire:model="stock_code" placeholder="Contoh: STK-00123" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Part Number" wire:model="part_number" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="part_number" class="form-label">Part Number</label>
+                        <input type="text" id="part_number" class="form-control" wire:model="part_number" placeholder="Contoh: PN-AX1209" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Mnemonic" wire:model="mnemonic" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="mnemonic" class="form-label">Mnemonic</label>
+                        <input type="text" id="mnemonic" class="form-control" wire:model="mnemonic" placeholder="Singkatan barang (misal: BRG-ELC)" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Nama Barang" wire:model="nama_barang" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="nama_barang" class="form-label">Nama Barang</label>
+                        <input type="text" id="nama_barang" class="form-control" wire:model="nama_barang" placeholder="Contoh: Motor Servo 220V" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Warehouse" wire:model="warehouse" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="warehouse" class="form-label">Warehouse</label>
+                        <input type="text" id="warehouse" class="form-control" wire:model="warehouse" placeholder="Gudang A / Gudang Utama" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="UOM" wire:model="uom" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="uom" class="form-label">UOM</label>
+                        <input type="text" id="uom" class="form-control" wire:model="uom" placeholder="PCS / BOX / UNIT" required>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="number" class="form-control" placeholder="Qty" wire:model="qty" required>
-                </div>
+                    <div class="mb-3">
+                        <div class="d-block mb-2">
+                            <label for="qty" class="form-label mb-0">Qty</label>
+                            <small class="text-danger d-block">Optional</small>
+                        </div>
+                        <input type="number" id="qty" class="form-control" wire:model="qty" placeholder="Jumlah awal (jika ada)">
+                    </div>
 
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Location" wire:model="location" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" class="form-control" wire:model="location" placeholder="Rak / Blok / Area (misal: RAK-B2)" required>
+                    </div>
 
-                <div class="mb-3">
-                    <textarea class="form-control" placeholder="Detail Description" wire:model="deskripsi" required></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label for="deskripsi" class="form-label">Status Barang</label>
+                        <select id="deskripsi" class="form-select" wire:model="status" required>
+                            <option value="">-- Pilih Status Barang --</option>
+                            <option value="Available">
+                                Available — tersedia untuk proyek
+                            </option>
+                            <option value="In use">
+                                In use — sudah diperuntukkan proyek tetapi masih di warehouse
+                            </option>
+                            <option value="Damaged">
+                                Damaged — rusak
+                            </option>
+                        </select>
+                    </div>
 
-                <div class="mb-3">
-                    <input type="file" class="form-control" wire:model="image" required>
-                </div>
 
-                <button class="btn btn-primary w-100">SAVE</button>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" id="image" class="form-control" wire:model="image" accept="image/*" required>
+                    </div>
 
-            </form>
+                    <h4 class="mb-1 mt-4">Detail Barang Masuk (Opsional)</h4>
+                    <hr>
 
-        </div>
+                    <div class="row mb-4 mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Foto Barang / Kerusakan</label>
+                            <input type="file" class="form-control" wire:model="damage_image" accept="image/*">
+                            <small class="text-muted">
+                                Upload kondisi barang saat diterima
+                            </small>
+
+                            @error("damage_image")
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Keterangan Kerusakan</label>
+                            <textarea class="form-control" wire:model.defer="kerusakan" rows="3" placeholder="Contoh: Kemasan penyok, segel rusak, atau barang pecah"></textarea>
+
+                            @error("kerusakan")
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100">
+                        SAVE
+                    </button>
+
+                </form>
+            </div>
+        @endif
+
+
     </div>
+
+    @if ($barcodePreview)
+        <div class="mt-4 pb-5 text-center">
+            <p class="fw-semibold mb-2">QR / Barcode Barang</p>
+            <img src="{{ asset("storage/" . $barcodePreview) }}" class="img-fluid rounded shadow" style="max-width: 220px;">
+            <div class="mt-2">
+                <a href="{{ asset("storage/" . $barcodePreview) }}" download class="btn btn-success btn-sm">
+                    Download Barcode
+                </a>
+            </div>
+        </div>
+    @endif
+
 
 
     <style>

@@ -29,6 +29,10 @@ class CreateBarang extends Component
     public $deskripsi;
     public $image;
     public $status = 'pending';
+    public $barcodePreview = null;
+
+    public $damage_image;
+    public $kerusakan;
 
     public function mount()
     {
@@ -50,14 +54,7 @@ class CreateBarang extends Component
 
     public function submit()
     {
-        $this->validate([
-            'stock_code'   => 'required',
-            'nama_barang'  => 'required',
-            'qty'          => 'required|numeric',
-            'image'        => 'nullable|image|max:10240',
-        ]);
-
-        /** Upload image barang **/
+        /** Upload image **/
         $imagePath = null;
         if ($this->image) {
             $filename = 'barang_' . time() . '.' . $this->image->getClientOriginalExtension();
@@ -67,7 +64,11 @@ class CreateBarang extends Component
         /** Generate barcode **/
         $barcodePath = $this->generateQRCode($this->stock_code);
 
-        /** Update atau Create barang **/
+        /** Preview barcode **/
+        $this->barcodePreview = $barcodePath;
+
+        $qty = (int) ($this->qty ?: 0);
+
         $barang = Barang::updateOrCreate(
             ['stock_code' => $this->stock_code],
             [
@@ -76,34 +77,53 @@ class CreateBarang extends Component
                 'nama_barang'   => $this->nama_barang,
                 'warehouse'     => $this->warehouse,
                 'uom'           => $this->uom,
-                'qty'           => $this->qty,
-                'soh_odoo'      => $this->qty,
+                'qty'           => $qty,
+                'soh_odoo'      => $qty,
                 'location'      => $this->location,
-                'difference'    => 0,
                 'kode_barcode'  => 'BC' . $this->stock_code,
                 'image'         => $imagePath,
                 'image_barcode' => $barcodePath,
-                'status'        => 'approved',
-                'deskripsi'     => $this->deskripsi
+                'status'        => $this->status,
             ]
         );
 
-        /** ✅ TAMBAH STOK HISTORY **/
-        StokHistory::create([
-            'barang_id'    => $barang->id,
-            'jumlah'       => $this->qty,
-            'status'       => 'masuk',
-            'requested_by' => Auth::id(),
-        ]);
+        $imagePath = null;
 
-        /** Alert **/
+        if ($this->damage_image) {
+            $imagePath = $this->damage_image
+                ->store('kondisi_barang/masuk', 'public');
+        }
+
+
+        if ($qty > 0) {
+            StokHistory::create([
+                'barang_id'    => $barang->id,
+                'jumlah'       => $qty,
+                'status'       => 'masuk',
+                'image'        => $imagePath,
+                'kerusakan'    => $this->kerusakan,
+                'requested_by' => Auth::id(),
+            ]);
+        }
+
         LivewireAlert::title('Barang Tersimpan!')
             ->success()
             ->show();
 
-        $this->reset();
+        /** Reset TANPA hapus barcode **/
+        $this->reset([
+            'stock_code',
+            'part_number',
+            'mnemonic',
+            'nama_barang',
+            'warehouse',
+            'uom',
+            'qty',
+            'location',
+            'deskripsi',
+            'image',
+        ]);
     }
-
 
     public function generateQRCode($stockCode)
     {

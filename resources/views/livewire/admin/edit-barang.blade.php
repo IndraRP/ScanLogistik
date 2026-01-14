@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Warehouse</label>
+                    <label class="form-label">Warehouse/Vendor</label>
                     <input type="text" class="form-control" wire:model.defer="warehouse">
                 </div>
 

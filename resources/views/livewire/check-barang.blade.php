@@ -185,6 +185,52 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="rounded-4 mt-5 bg-white p-4" wire:ignore>
+                            <h5 class="mb-3">Detail History Masuk dan Keluar</h5>
+                            <table id="stokHistoryTable" class="table-striped table-bordered w-100 table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tanggal</th>
+                                        <th>Status</th>
+                                        <th>Jumlah</th>
+                                        <th>Kerusakan</th>
+                                        <th>Image</th>
+                                        <th>Admin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($stokHistories as $index => $history)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $history->created_at->format("d-m-Y H:i") }}</td>
+                                            <td>
+                                                <span class="badge {{ $history->status === "masuk" ? "bg-success" : "bg-danger" }}">
+                                                    {{ ucfirst($history->status) }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $history->jumlah }}</td>
+                                            <td>{{ $history->kerusakan ?? "-" }}</td>
+                                            <td>
+                                                @if ($history->image)
+                                                    <img src="{{ asset("storage/" . $history->image) }}" width="60" class="img-thumbnail">
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td>{{ $history->requestedBy->name ?? "-" }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="w-100 mt-3">
+                            <a href="{{ route("barang.export", $item->id) }}">
+                                <button class="btn btn-success w-100">Download/Export Excel</button>
+                            </a>
+                        </div>
                     @else
                         <p class="text-muted">
                             {{ $productDescription ?? "QR Code belum dipindai" }}
@@ -696,3 +742,32 @@
         }
     </style>
 </div>
+
+@push("scripts")
+    <script>
+        let stokTable;
+
+        function initTable() {
+            stokTable = $('#stokHistoryTable').DataTable({
+                dom: 'lfrtip',
+                paging: true,
+                searching: true,
+                ordering: true,
+                pageLength: 10
+            });
+        }
+
+        document.addEventListener('livewire:load', function() {
+            initTable();
+        });
+
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.hook('message.processed', () => {
+                if ($.fn.DataTable.isDataTable('#stokHistoryTable')) {
+                    stokTable.destroy();
+                }
+                initTable();
+            });
+        });
+    </script>
+@endpush

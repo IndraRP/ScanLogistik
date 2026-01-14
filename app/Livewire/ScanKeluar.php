@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ScanKeluar extends Component
 {
+    use WithFileUploads;
     public $kode_barcode;
     public $productDescription = null;
     public $scanning = true;
@@ -23,6 +25,9 @@ class ScanKeluar extends Component
     public $productNames = [];
     public $productStocks = [];
     public $qtyKeluar = [];
+
+    public $damage_image;
+    public $kerusakan;
 
     public function mount()
     {
@@ -80,7 +85,7 @@ class ScanKeluar extends Component
 
             // dd($qtyKeluar);
 
-            if (!is_numeric($qtyKeluar) || $qtyKeluar <= 0) {
+            if (!is_numeric($qtyKeluar) || $qtyKeluar < 0) {
                 $this->addError("qtyKeluar.{$item->id}", 'Jumlah keluar tidak valid.');
                 continue;
             }
@@ -95,14 +100,25 @@ class ScanKeluar extends Component
 
                     // ✅ Kurangi stok
                     $barang->update([
-                        'qty' => $barang->qty - $qtyKeluar
+                        'qty' => $barang->qty - $qtyKeluar,
+                        'soh_odoo' => $barang->soh_odoo - $qtyKeluar
                     ]);
+
+
+                    $imagePath = null;
+
+                    if ($this->damage_image) {
+                        $imagePath = $this->damage_image
+                            ->store('kondisi_barang/masuk', 'public');
+                    }
 
                     // ✅ Simpan ke stok history
                     StokHistory::create([
                         'barang_id'    => $barang->id,
                         'jumlah'       => $qtyKeluar,
                         'status'       => 'keluar',
+                        'image'        => $imagePath,
+                        'kerusakan'    => $this->kerusakan,
                         'requested_by' => Auth::id(),
                     ]);
                 });

@@ -93,6 +93,26 @@
 
                         </div>
 
+                        <hr>
+                        <div class="row mt-3">
+                            <h4 class="">Data Detail (Opsional)</h4>
+                            <div class="col-md-6">
+                                <label class="form-label">Foto Barang / Kerusakan</label>
+                                <input type="file" class="form-control" wire:model="damage_image">
+                                @error("damage_image")
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Keterangan Kerusakan</label>
+                                <textarea class="form-control" wire:model.defer="kerusakan" rows="3"></textarea>
+                                @error("kerusakan")
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+
                         {{-- ACTION --}}
                         <div class="mt-4">
                             <button class="btn btn-danger" type="button" wire:click="minusStock">

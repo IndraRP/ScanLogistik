@@ -15,6 +15,10 @@ class Home extends Component
     public $totalBarangMasuk;
     public $totalBarangKeluar;
     public $totalBarang;
+    public $totalJumlah;
+    public $barangDibawah100;
+    public $barangDibawah50;
+    public $barangDibawah20;
 
     protected $listeners = ['loadCharts'];
 
@@ -26,9 +30,25 @@ class Home extends Component
 
         $this->totalBarangMasuk = StokHistory::where('status', 'masuk')->count();
         $this->totalBarangKeluar = StokHistory::where('status', 'keluar')->count();
-
         $this->totalBarang = Barang::count();
-        // dd($this->totalBarang);
+        $this->totalJumlah = Barang::sum('qty');
+
+        $this->barangDibawah100 = Barang::where('qty', '<', 100)
+            ->where('qty', '>=', 50)
+            ->orderBy('qty', 'asc')
+            ->get(['id', 'nama_barang', 'qty']);
+
+        $this->barangDibawah50 = Barang::where('qty', '<', 50)
+            ->where('qty', '>=', 20)
+            ->orderBy('qty', 'asc')
+            ->get(['id', 'nama_barang', 'qty']);
+
+        $this->barangDibawah20 = Barang::where('qty', '<', 20)
+            ->orderBy('qty', 'asc')
+            ->get(['id', 'nama_barang', 'qty']);
+
+
+        // dd($this->totalJumlah);
 
         $this->year = now()->year;
         $this->month = now()->month;

@@ -11,6 +11,14 @@
                     Informasi lengkap barang gudang
                 </p>
             </div>
+
+            <div>
+                <a href="{{ route("barang.export", $barang->id) }}" class="btn btn-success">
+                    Export Excel
+                </a>
+            </div>
+
+
         </div>
     </div>
 
@@ -102,11 +110,23 @@
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <label class="text-muted">SOH Odoo</label>
+                            <label class="text-muted">Stock on Hand</label>
                             <div class="fw-semibold">{{ $barang->soh_odoo }}</div>
                         </div>
 
                         <div class="col-md-3 mb-3">
+                            <label class="text-muted">Status</label>
+                            <div>
+                                <span class="badge @if ($barang->status === "Available") bg-success
+                                    @elseif ($barang->status === "In use") bg-primary
+                                    @elseif ($barang->status === "Damaged") bg-warning text-dark
+                                    @else bg-secondary @endif">
+                                    {{ $barang->status }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- <div class="col-md-3 mb-3">
                             <label class="text-muted">Outstanding</label>
                             <div class="fw-semibold">{{ $barang->outstanding_belum_wr }}</div>
                         </div>
@@ -116,7 +136,8 @@
                             <div class="fw-semibold text-danger">
                                 {{ $barang->difference }}
                             </div>
-                        </div>
+                        </div> --}}
+
                     </div>
                 </div>
             </div>
@@ -152,24 +173,24 @@
 
             <div class="row fs-6">
                 <div class="col-md-4 mb-3">
-                    <label class="text-muted">Warehouse</label>
+                    <label class="text-muted">Warehouse/Vendor</label>
                     <div class="fw-semibold">{{ $barang->warehouse }}</div>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="text-muted">Location</label>
+                    <label class="text-muted">Location/Rak</label>
                     <div class="fw-semibold">{{ $barang->location }}</div>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="text-muted">UOM</label>
+                    <label class="text-muted">UOM (Unit of Measure)</label>
                     <div class="fw-semibold">{{ $barang->uom }}</div>
                 </div>
 
                 <div class="col-md-12">
                     <label class="text-muted">Note / Remarks</label>
                     <div class="fw-semibold">
-                        {{ $barang->note ?? "-" }}
+                        {{ $barang->deskripsi ?? "-" }}
                     </div>
                 </div>
             </div>
@@ -177,11 +198,88 @@
         </div>
     </div>
 
+    <div class="rounded-4 mt-5 bg-white p-4" wire:ignore>
+        <h5 class="mb-3">Detail History Masuk dan Keluar</h5>
+        <table id="stokHistoryTable" class="table-striped table-bordered w-100 table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                    <th>Jumlah</th>
+                    <th>Kerusakan</th>
+                    <th>Image</th>
+                    <th>Admin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($stokHistories as $index => $history)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $history->created_at->format("d-m-Y H:i") }}</td>
+                        <td>
+                            <span class="badge {{ $history->status === "masuk" ? "bg-success" : "bg-danger" }}">
+                                {{ ucfirst($history->status) }}
+                            </span>
+                        </td>
+                        <td>{{ $history->jumlah }}</td>
+                        <td>{{ $history->kerusakan ?? "-" }}</td>
+                        <td>
+                            @if ($history->image)
+                                <img src="{{ asset("storage/" . $history->image) }}" width="60" class="img-thumbnail">
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>{{ $history->requestedBy->name ?? "-" }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
     <style>
         .utama {
             padding-top: 80px;
             padding-bottom: 70px;
         }
+
+        .dataTables_filter,
+        .dataTables_paginate,
+        .dataTables_length,
+        .dataTables_info {
+            display: block !important;
+        }
     </style>
 
+
 </div>
+
+@push("scripts")
+    <script>
+        let stokTable;
+
+        function initTable() {
+            stokTable = $('#stokHistoryTable').DataTable({
+                dom: 'lfrtip',
+                paging: true,
+                searching: true,
+                ordering: true,
+                pageLength: 10
+            });
+        }
+
+        document.addEventListener('livewire:load', function() {
+            initTable();
+        });
+
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.hook('message.processed', () => {
+                if ($.fn.DataTable.isDataTable('#stokHistoryTable')) {
+                    stokTable.destroy();
+                }
+                initTable();
+            });
+        });
+    </script>
+@endpush

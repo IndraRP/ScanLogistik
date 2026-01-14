@@ -6,7 +6,7 @@
     <div class="pt-5">
         <!-- Summary Cards -->
         <div class="row mb-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card bg-success w-100 mt-md-0 text-white">
                     <div class="card-body">
                         <h5 class="card-title">Total Transaksi Masuk</h5>
@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card bg-danger w-100 mt-md-0 mt-4 text-white">
                     <div class="card-body">
                         <h5 class="card-title">Total Transaksi Keluar</h5>
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card bg-warning w-100 mt-md-0 mt-4 text-white">
                     <div class="card-body">
                         <h5 class="card-title">Total Barang</h5>
@@ -31,10 +31,110 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-3">
+                <div class="card bg-primary w-100 mt-md-0 mt-4 text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Jumlah Barang</h5>
+                        <h2 class="card-text" id="totalJumlah">{{ $totalJumlah }}</h2>
+                    </div>
+                </div>
+            </div>
         </div>
 
+
+        <div class="row g-3">
+
+            {{-- STOK < 100 --}}
+            <div class="col-md-4">
+                <div class="card border-success h-100 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-success mb-3">
+                            Stok < 100 <span class="badge bg-success float-end">
+                                {{ $barangDibawah100->count() }}
+                                </span>
+                        </h6>
+
+                        <ul class="list-group list-group-flush">
+                            @forelse ($barangDibawah100 as $item)
+                                <li class="list-group-item d-flex justify-content-between px-0">
+                                    <span>{{ $item->nama_barang }}</span>
+                                    <span class="badge bg-success">
+                                        {{ $item->qty }}
+                                    </span>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted text-center">
+                                    Aman 👍
+                                </li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {{-- STOK < 50 --}}
+            <div class="col-md-4">
+                <div class="card border-warning h-100 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-warning mb-3">
+                            Stok < 50 <span class="badge bg-warning text-dark float-end">
+                                {{ $barangDibawah50->count() }}
+                                </span>
+                        </h6>
+
+                        <ul class="list-group list-group-flush">
+                            @forelse ($barangDibawah50 as $item)
+                                <li class="list-group-item d-flex justify-content-between px-0">
+                                    <span>{{ $item->nama_barang }}</span>
+                                    <span class="badge bg-warning text-dark">
+                                        {{ $item->qty }}
+                                    </span>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted text-center">
+                                    Aman 👍
+                                </li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {{-- STOK < 20 --}}
+            <div class="col-md-4">
+                <div class="card border-danger h-100 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold text-danger mb-3">
+                            Stok < 20 <span class="badge bg-danger float-end">
+                                {{ $barangDibawah20->count() }}
+                                </span>
+                        </h6>
+
+                        <ul class="list-group list-group-flush">
+                            @forelse ($barangDibawah20 as $item)
+                                <li class="list-group-item d-flex justify-content-between px-0">
+                                    <span>{{ $item->nama_barang }}</span>
+                                    <span class="badge bg-danger">
+                                        {{ $item->qty }}
+                                    </span>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted text-center">
+                                    Aman 👍
+                                </li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
         <!-- Filter Controls -->
-        <div class="d-flex pt-md-5 mb-3 gap-2 pt-4">
+        <div class="d-flex pt-md-5 mt-md-0 mb-3 mt-5 gap-2 pt-4">
             <select wire:model.live="year" class="form-select w-auto">
                 @for ($y = now()->year; $y >= 2020; $y--)
                     <option value="{{ $y }}">{{ $y }}</option>

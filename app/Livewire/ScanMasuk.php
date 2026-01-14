@@ -7,9 +7,11 @@ use App\Models\StokHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ScanMasuk extends Component
 {
+    use WithFileUploads;
     public $kode_barcode;
     public $productDescription = null;
     public $scanning = true;
@@ -18,9 +20,14 @@ class ScanMasuk extends Component
     public $selectedBarangIds = []; // Array untuk menyimpan ID barang yang dipilih
     // Tidak perlu lagi stokInputs karena akan menggunakan nilai stok langsung dari QR
 
+
+    public $damage_image;
+    public $kerusakan;
+
     // Data sementara untuk tampilan
     public $productNames = [];
     public $productStocks = [];
+    public $qtyMasuk = [];
 
     public function mount()
     {
@@ -69,6 +76,8 @@ class ScanMasuk extends Component
         foreach ($this->barangList as $item) {
 
             $stockCode = $item->stock_code;
+            $qtyMasuk = $this->qtyMasuk[$item->id] ?? null;
+            // dd($qtyMasuk);
 
             $barang = Barang::where('stock_code', $stockCode)->first();
 
@@ -77,30 +86,39 @@ class ScanMasuk extends Component
                 continue;
             }
 
-            if (!is_numeric($item->qty) || $item->qty <= 0) {
+            if (!is_numeric($item->qty) || $item->qty < 0) {
                 $this->addError("stok.{$stockCode}", 'Nilai stok tidak valid.');
                 continue;
             }
 
             try {
                 $qtyLama = (int) $barang->qty;
-                $qtyQR   = (int) $item->qty;
-                $qtyBaru = $qtyLama + $qtyQR;
+                $qtyBaru = $qtyLama + $qtyMasuk;
 
                 // ✅ Update stok barang
                 $barang->update([
-                    'qty' => $qtyBaru
+                    'qty' => $qtyBaru,
+                    'soh_odoo' => $qtyBaru,
                 ]);
+
+                $imagePath = null;
+
+                if ($this->damage_image) {
+                    $imagePath = $this->damage_image
+                        ->store('kondisi_barang/masuk', 'public');
+                }
 
                 // ✅ Insert ke stok history
                 StokHistory::create([
-                    'barang_id'   => $barang->id,
-                    'jumlah'      => $qtyQR,
-                    'status'      => 'masuk',
-                    'requested_by' => Auth::id(), // id user login
+                    'barang_id'    => $barang->id,
+                    'jumlah'       => $qtyMasuk,
+                    'status'       => 'masuk',
+                    'image'        => $imagePath,
+                    'kerusakan'    => $this->kerusakan,
+                    'requested_by' => Auth::id(),
                 ]);
 
-                $messages[] = "Stok {$barang->nama_barang} bertambah {$qtyQR} (Total: {$qtyBaru}).";
+                $messages[] = "Stok {$barang->nama_barang} bertambah {$qtyMasuk} (Total: {$qtyBaru}).";
             } catch (\Exception $e) {
                 Log::error('Add stock error: ' . $e->getMessage());
                 $this->addError("system.{$stockCode}", 'Gagal menambah stok.');

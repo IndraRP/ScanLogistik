@@ -15,6 +15,7 @@ class CheckBarang extends Component
     public $barang = null;
     public $barangList = [];
     public $selectedBarangIds = [];
+    public $stokHistories = [];
 
     // Chart properties
     public $year;
@@ -53,6 +54,12 @@ class CheckBarang extends Component
         $this->barangList = [$barang];
         $this->currentBarangId = $barang->id;
         $this->selectedBarangIds[$barang->id] = true;
+
+        // 🔥 Stok History + User
+        $this->stokHistories = StokHistory::with('requestedBy')
+            ->where('barang_id', $barang->id)
+            ->latest()
+            ->get();
 
         $this->scanning = false;
         $this->dispatch('scanningStateChanged', ['scanning' => false]);

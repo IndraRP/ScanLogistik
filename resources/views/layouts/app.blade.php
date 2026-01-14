@@ -57,7 +57,7 @@
 </head>
 
 <body class="no-right-click text-dark" style="background-color:aliceblue; font-family: 'Ubuntu', sans-serif;">
-    @if (!in_array(Route::currentRouteName(), ["login", "sign_up", "scan", "create", "ScanIntro", "barang-excel", "ScanMasuk", "ScanKeluar", "BarangMasuk", "CheckBarang"]))
+    @if (!in_array(Route::currentRouteName(), ["login", "sign_up", "scan", "create", "ScanIntro", "barang-excel", "ScanMasuk", "ScanKeluar", "BarangMasuk", "CheckBarang", "InputCodeBarang"]))
         @include("layouts.navbar")
     @endif
 

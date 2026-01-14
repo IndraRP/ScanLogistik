@@ -11,6 +11,7 @@ use App\Livewire\BarangMasuk;
 use App\Livewire\CheckBarang;
 use App\Livewire\CreateBarang;
 use App\Livewire\Home;
+use App\Livewire\InputCodeBarang;
 use App\Livewire\ScanBarcode;
 use App\Livewire\ScanIntro;
 use App\Livewire\ScanKeluar;
@@ -46,9 +47,17 @@ Route::get('/ScanMasuk', ScanMasuk::class)->name('ScanMasuk');
 
 Route::get('/ScanKeluar', ScanKeluar::class)->name('ScanIntro');
 
+Route::get('/InputCode', InputCodeBarang::class)->name('InputCodeBarang');
+
 Route::get('/AllBarang', AllBarang::class)->name('admin_all');
 Route::get('/ViewBarang/{id}', ViewBarang::class)->name('view_barang');
 Route::get('/EditBarang/{id}', EditBarang::class)->name('edit_barang');
+Route::get('/barang/{id}/export', [ViewBarang::class, 'export'])
+    ->name('barang.export');
+
+Route::post('/barang/exportall', [AllBarang::class, 'export'])
+    ->name('barang.exportall');
+
 
 Route::get('/CheckBarang', CheckBarang::class)->name('CheckBarang');
 Route::get('/admin_acc', AccBarang::class)->name('admin_acc');
