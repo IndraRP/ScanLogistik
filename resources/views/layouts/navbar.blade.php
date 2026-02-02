@@ -2,15 +2,40 @@
     <nav class="navbar navbar-expand-lg navbar-primary">
         <div class="w-100 d-flex">
             @auth
-                <div class="d-flex align-items-center w-100">
-                    <img src="{{ auth()->user()->avatar ? asset("storage/" . auth()->user()->avatar) : "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png" }}" class="rounded-pill border-dark border" style="width: 40px; height:40px; object-fit:cover" alt="User Avatar">
+                <div class="dropdown">
+                    <div class="d-flex align-items-center w-100 dropdown-toggle" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
 
-                    <div class="d-md-flex align-items-center d-block ms-3">
-                        <p class="fs-7-besar mb-0 text-white">Welcome</p>
-                        <p class="fs-7-respon ms-md-2 mb-0 ms-0 text-white">{{ auth()->user()->name }}!</p>
+                        <img src="{{ auth()->user()->avatar ? asset("storage/" . auth()->user()->avatar) : "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png" }}" class="rounded-pill border-dark border" style="width: 40px; height:40px; object-fit:cover" alt="User Avatar">
+
+                        <div class="d-md-flex align-items-center d-block ms-3">
+                            <p class="fs-7-besar mb-0 text-white">Welcome</p>
+                            <p class="fs-7-respon ms-md-2 mb-0 ms-0 text-white">
+                                {{ auth()->user()->name }}!
+                            </p>
+                        </div>
                     </div>
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li class="text-muted small px-3 py-2">
+                            Signed in as <br>
+                            <strong>{{ auth()->user()->email }}</strong>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <form method="POST" action="{{ route("logout") }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             @endauth
+
 
             @guest
                 <div class="d-flex align-items-center">

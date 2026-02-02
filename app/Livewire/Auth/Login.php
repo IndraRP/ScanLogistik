@@ -40,7 +40,6 @@ class Login extends Component
         return $this->redirect('/');
     }
 
-
     // private function redirectBasedOnRole($user)
     // {
     //     // dd($user->role);  // Tampilkan nilai role sebelum melakukan redirect

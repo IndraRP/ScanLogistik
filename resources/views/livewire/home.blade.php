@@ -7,38 +7,46 @@
         <!-- Summary Cards -->
         <div class="row mb-4">
             <div class="col-md-3">
-                <div class="card bg-success w-100 mt-md-0 text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Transaksi Masuk</h5>
-                        <h2 class="card-text" id="totalMasuk">{{ $totalBarangMasuk }}</h2>
+                <a href="/HistoryMasuk" class="text-decoration-none">
+                    <div class="card bg-success w-100 mt-md-0 hover-scale text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Transaksi Masuk</h5>
+                            <h2 class="card-text" id="totalMasuk">{{ $totalBarangMasuk }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3">
-                <div class="card bg-danger w-100 mt-md-0 mt-4 text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Transaksi Keluar</h5>
-                        <h2 class="card-text" id="totalKeluar">{{ $totalBarangKeluar }}</h2>
+                <a href="/HistoryKeluar" class="text-decoration-none">
+                    <div class="card bg-danger w-100 mt-md-0 hover-scale mt-4 text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Transaksi Keluar</h5>
+                            <h2 class="card-text" id="totalKeluar">{{ $totalBarangKeluar }}</h2>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card bg-warning w-100 mt-md-0 mt-4 text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Barang</h5>
-                        <h2 class="card-text" id="totalKeluar">{{ $totalBarang }}</h2>
-                    </div>
-                </div>
+                </a>
             </div>
 
             <div class="col-md-3">
-                <div class="card bg-primary w-100 mt-md-0 mt-4 text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Jumlah Barang</h5>
-                        <h2 class="card-text" id="totalJumlah">{{ $totalJumlah }}</h2>
+                <a href="/AllBarang" class="text-decoration-none">
+                    <div class="card bg-warning w-100 mt-md-0 hover-scale mt-4 text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Barang</h5>
+                            <h2 class="card-text" id="totalKeluar">{{ $totalBarang }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="/AllBarang" class="text-decoration-none">
+                    <div class="card bg-primary w-100 mt-md-0 hover-scale mt-4 text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Jumlah Barang</h5>
+                            <h2 class="card-text" id="totalJumlah">{{ $totalJumlah }}</h2>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -254,7 +262,19 @@
             width: 100%;
             margin-top: 20px;
         }
+
+        .hover-scale {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+            /* membesar 5% */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
     </style>
+
 </div>
 
 @push("scripts")

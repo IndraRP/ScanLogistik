@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Barang;
 use App\Models\StokHistory;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -226,5 +227,37 @@ class AllBarang extends Component
         (new Xlsx($spreadsheet))->save($tempPath);
 
         return response()->download($tempPath)->deleteFileAfterSend(true);
+    }
+
+
+    public function exportPdf(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        // VALIDASI
+        if (!$ids || count($ids) === 0) {
+            abort(400, 'Barang tidak dipilih');
+        }
+
+        $barangs = [];
+        foreach ($ids as $id) {
+            $barang = Barang::findOrFail($id);
+            $histories = StokHistory::where('barang_id', $id)->get();
+
+            $barangs[] = [
+                'barang' => $barang,
+                'histories' => $histories,
+            ];
+        }
+
+        // dd($barangs);
+
+        $pdf = Pdf::loadView('exports.barang_multi_pdf', [
+            'barangs' => $barangs
+        ])->setPaper('A4', 'landscape');
+
+        $fileName = 'Barang_Multi_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->download($fileName);
     }
 }

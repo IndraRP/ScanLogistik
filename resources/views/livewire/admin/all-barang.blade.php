@@ -126,7 +126,6 @@
         </div>
     @endif
 
-
     <div class="card bg-blue text-dark shadow-lg">
         <div class="card-header d-flex align-items-center" style="height: 50px;">
             <i class="bi bi-clipboard-check me-2"></i>
@@ -134,14 +133,25 @@
         </div>
 
         <div class="table-responsive table-wrapper">
-            <form id="exportForm" method="POST" action="{{ route("barang.exportall") }}">
-                @csrf
-                <input type="hidden" name="ids" id="exportIds">
+            <div class="d-flex">
+                <form id="exportForm" method="POST" action="{{ route("barang.exportall") }}">
+                    @csrf
+                    <input type="hidden" name="ids" id="exportIdsExcel">
 
-                <button type="button" id="exportExcel" class="btn btn-success mb-2">
-                    <i class="bi bi-file-earmark-excel"></i> Export Excel
-                </button>
-            </form>
+                    <button type="button" id="exportExcel" class="btn btn-success ms-4 mt-4">
+                        <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
+                    </button>
+                </form>
+
+                <form id="exportFormpdf" method="POST" action="{{ route("barang.exportall_pdf") }}">
+                    @csrf
+                    <input type="hidden" name="ids" id="exportIdsPdf">
+
+                    <button type="button" id="exportPdf" class="btn btn-danger ms-2 mt-4">
+                        <i class="bi bi-file-earmark-pdf"></i> Export Pdf
+                    </button>
+                </form>
+            </div>
 
 
             <table id="barangTable" class="table-striped table-hover table text-nowrap align-middle" style="width:100%" wire:ignore>
@@ -219,6 +229,10 @@
 
                             {{-- AKSI --}}
                             <td>
+                                <button class="btn btn-secondary btn-sm mb-1" onclick="printImage('{{ asset("storage/" . $barang->image_barcode) }}')">
+                                    <i class="bi bi-printer"></i>
+                                </button>
+
                                 <a href="{{ asset("storage/" . $barang->image_barcode) }}" download class="btn btn-success btn-sm mb-1">
                                     <i class="bi bi-download"></i>
                                 </a>
@@ -242,6 +256,36 @@
             </table>
         </div>
     </div>
+
+    <script>
+        function printImage(src) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print Barcode</title>
+        <style>
+          body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+          }
+          img {
+            max-width: 100%;
+          }
+        </style>
+      </head>
+      <body>
+        <img src="${src}" onload="window.print(); window.close();" />
+      </body>
+    </html>
+  `);
+            printWindow.document.close();
+        }
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -271,12 +315,10 @@
                 }
             });
 
-            // ✅ CHECK ALL
             $('#checkAll').on('click', function() {
                 $('.row-check').prop('checked', this.checked);
             });
 
-            // ✅ EXPORT EXCEL
             $('#exportExcel').on('click', function() {
                 let ids = [];
 
@@ -289,12 +331,26 @@
                     return;
                 }
 
-                // kirim sebagai JSON string
-                $('#exportIds').val(JSON.stringify(ids));
-
-                // submit form
+                $('#exportIdsExcel').val(JSON.stringify(ids));
                 $('#exportForm').submit();
             });
+
+            $('#exportPdf').on('click', function() {
+                let ids = [];
+
+                $('.row-check:checked').each(function() {
+                    ids.push($(this).val());
+                });
+
+                if (ids.length === 0) {
+                    alert('Pilih minimal 1 barang');
+                    return;
+                }
+
+                $('#exportIdsPdf').val(JSON.stringify(ids));
+                $('#exportFormpdf').submit();
+            });
+
 
         });
     </script>

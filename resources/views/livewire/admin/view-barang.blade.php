@@ -14,10 +14,13 @@
 
             <div>
                 <a href="{{ route("barang.export", $barang->id) }}" class="btn btn-success">
-                    Export Excel
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
+                </a>
+
+                <a href="{{ route("barang.export_pdf", $barang->id) }}" class="btn btn-danger">
+                    <i class="bi bi-file-earmark-pdf"></i> Export PDF
                 </a>
             </div>
-
 
         </div>
     </div>
