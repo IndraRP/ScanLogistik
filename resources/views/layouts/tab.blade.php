@@ -12,12 +12,12 @@
 
 
             <div class="row gap-md-4 gap-0">
-                <a href="/ScanIntro" class="text-dark text-decoration-none col-md-1 col-6">
+                <a href="/KeluarIntro" class="text-dark text-decoration-none col-md-1 col-6">
                     <div class="rounded-4 card1 p-3 text-center shadow">
                         <div class="d-flex justify-content-center">
-                            <img src="https://cdn-icons-png.flaticon.com/128/17410/17410384.png" class="gambar">
+                            <img src="https://cdn-icons-png.flaticon.com/128/18594/18594405.png" class="gambar">
                         </div>
-                        <p class="fw-semibold text-gambar mb-0 mt-2">Scan Here</p>
+                        <p class="fw-semibold text-gambar mb-0 mt-2">Issue</p>
                     </div>
                 </a>
 
@@ -45,6 +45,16 @@
                             <img src="https://cdn-icons-png.flaticon.com/128/18253/18253997.png" class="gambar">
                         </div>
                         <p class="fw-semibold text-gambar mb-0 mt-2">Check</p>
+                    </div>
+                </a>
+
+
+                <a href="/NewMatIntro" class="text-dark text-decoration-none col-md-1 col-6">
+                    <div class="rounded-4 card1 mt-md-0 mt-4 p-3 text-center shadow">
+                        <div class="d-flex justify-content-center">
+                            <img src="https://cdn-icons-png.flaticon.com/128/13635/13635098.png" class="gambar">
+                        </div>
+                        <p class="fw-semibold text-gambar mb-0 mt-2" style="font-size: 13px">New Material</p>
                     </div>
                 </a>
             </div>

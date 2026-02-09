@@ -1,9 +1,8 @@
 <div>
     <div class="d-flex align-items-center justify-content-center utama p-4" style="background-color: #5f6df5;">
         <i class="fa-solid fa-angle-left fs-3 mb-0 text-white"></i>
-        <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Input Code Barang Masuk</p>
+        <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Input Code Barang Keluar</p>
     </div>
-
 
     @if (session()->has("message"))
         <div class="alert alert-success">
@@ -11,9 +10,8 @@
         </div>
     @endif
 
-
     <div class="rounded-pill icon-wrapper d-flex justify-content-center align-items-center">
-        <a href="/BarangMasuk">
+        <a href="/KeluarIntro">
             <i class="bi bi-arrow-left-short icon"></i>
         </a>
     </div>
@@ -54,22 +52,23 @@
             </div>
 
             <div class="d-flex mt-4 gap-2">
-                <button class="btn btn-success w-100" wire:click="pilihAksi('masuk')">
-                    Barang Masuk
+                <button class="btn btn-danger w-100" wire:click="pilihAksi('keluar')">
+                    Barang Keluar
                 </button>
             </div>
         </section>
     @endif
 
-    @if ($step === 3 && $action === "masuk")
+    @if ($step === 3 && $action === "keluar")
         <div class="container mt-4">
-            <label class="form-label">Qty Barang Masuk</label>
-            <input type="number" class="form-control" required wire:model="qtyMasuk">
+            <label class="form-label">Qty Barang Keluar</label>
+            <input type="number" class="form-control" required wire:model="qtyKeluar">
 
             <hr>
             <h5>Data Detail (Opsional)</h5>
             <label class="form-label mt-3">Foto Kondisi Barang</label>
             <input type="file" class="form-control" wire:model="imageKondisi">
+
 
             <label class="form-label mt-3">Kondisi/kerusakan Barang</label>
             <input type="text" class="form-control" wire:model="kerusakanBarang">
@@ -78,8 +77,8 @@
                 <small class="text-danger">{{ $message }}</small>
             @enderror
 
-            <button class="btn btn-success w-100 mt-3" wire:click="submitMasuk">
-                Konfirmasi Barang Masuk
+            <button class="btn btn-danger w-100 mt-3" wire:click="submitKeluar">
+                Konfirmasi Barang Keluar
             </button>
         </div>
     @endif

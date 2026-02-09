@@ -2,20 +2,20 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
 use App\Models\Barang;
 use App\Models\StokHistory;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class InputCodeBarang extends Component
+class InputCodeKeluar extends Component
 {
     use WithFileUploads;
     public $stock_code;
     public $barang;
     public $step = 1;
     public $action;
-    public $qtyMasuk;
+    public $qtyKeluar;
     public $imageKondisi;
     public $kerusakanBarang;
 
@@ -40,34 +40,38 @@ class InputCodeBarang extends Component
         $this->action = $aksi;
         $this->step = 3;
     }
-    public function submitMasuk()
+
+    public function submitKeluar()
     {
         $this->validate([
-            'qtyMasuk'    => 'required|numeric|min:1',
+            'qtyKeluar'   => 'required|numeric|min:1',
             'imageKondisi' => 'max:10240'
         ]);
 
+        if ($this->qtyKeluar > $this->barang->qty) {
+            session()->flash('message', 'Stok tidak mencukupi');
+            return;
+        }
 
         $imagePath = null;
         if ($this->imageKondisi) {
             $imagePath = $this->imageKondisi
-                ->store('kondisi_barang/masuk', 'public');
+                ->store('kondisi_barang/keluar', 'public');
         }
 
-
-        $this->barang->increment('qty', $this->qtyMasuk);
-        $this->barang->increment('soh_odoo', $this->qtyMasuk);
+        $this->barang->decrement('qty', $this->qtyKeluar);
+        $this->barang->decrement('soh_odoo', $this->qtyKeluar);
 
         StokHistory::create([
             'barang_id'    => $this->barang->id,
-            'jumlah'       => $this->qtyMasuk,
+            'jumlah'       => $this->qtyKeluar,
             'kerusakan'    => $this->kerusakanBarang,
-            'status'       => 'masuk',
+            'status'       => 'keluar',
             'image'        => $imagePath, // ✅ simpan image
             'requested_by' => Auth::id(),
         ]);
 
-        session()->flash('message', 'Barang masuk berhasil');
+        session()->flash('message', 'Barang keluar berhasil');
         $this->resetFlow();
     }
 
@@ -78,7 +82,7 @@ class InputCodeBarang extends Component
             'barang',
             'step',
             'action',
-            'qtyMasuk',
+            'qtyKeluar',
             'imageKondisi',
         ]);
 
@@ -87,7 +91,7 @@ class InputCodeBarang extends Component
 
     public function render()
     {
-        return view('livewire.input-code-barang')
+        return view('livewire.input-code-keluar')
             ->extends('layouts.app')
             ->section('content');
     }

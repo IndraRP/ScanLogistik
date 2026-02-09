@@ -11,7 +11,7 @@
     @endif
 
 
-    <a href="/ScanIntro">
+    <a href="/KeluarIntro">
         <div class="rounded-pill icon-wrapper d-flex justify-content-center align-items-center">
             <i class="bi bi-arrow-left-short icon"></i>
         </div>

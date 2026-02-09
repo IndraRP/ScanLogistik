@@ -1,37 +1,63 @@
 <div class="container py-5">
-    <div class="mb-3 mt-5">
-        <h3>History Keluar</h1>
+    <div class="d-block d-md-flex mb-3 mt-5">
+        <h3>History Masuk</h1>
+
+            <div class="d-block d-md-flex ms-auto">
+                <button wire:click="exportExcel" class="btn btn-success">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
+                </button>
+
+                <button wire:click="exportPdf" class="btn btn-danger ms-2">
+                    <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                </button>
+            </div>
     </div>
-    <table class="table-bordered table">
-        <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Barang</th>
-                <th>Status</th>
-                <th>Jumlah</th>
-                <th>Requested By</th>
-                <th>Kerusakan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($histories as $row)
+    <div class="table-responsive">
+        <table class="table-bordered table-striped table">
+            <thead class="table-light">
                 <tr>
-                    <td>{{ $row->created_at?->format("d-m-Y H:i") }}</td>
-                    <td>{{ $row->barang->nama_barang ?? "-" }}</td>
-                    <td>
-                        <span class="badge bg-{{ $row->status == "masuk" ? "success" : "danger" }}">
-                            {{ strtoupper($row->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $row->jumlah }}</td>
-                    <td>{{ $row->requestedBy->name ?? "-" }}</td>
-                    <td>{{ $row->kerusakan ?? "-" }}</td>
+                    <th>Tanggal</th>
+                    <th>Barang</th>
+                    <th>Status</th>
+                    <th>Jumlah</th>
+                    <th>Requested By</th>
+                    <th>Kerusakan</th>
+                    <th>Image</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="text-center">Tidak ada data</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse($histories as $row)
+                    <tr>
+                        <td data-label="Tanggal">
+                            {{ $row->created_at?->format("d-m-Y H:i") }}
+                        </td>
+                        <td data-label="Barang">
+                            {{ $row->barang->nama_barang ?? "-" }}
+                        </td>
+                        <td data-label="Status">
+                            <span class="badge bg-{{ $row->status == "masuk" ? "success" : "danger" }}">
+                                {{ strtoupper($row->status) }}
+                            </span>
+                        </td>
+                        <td data-label="Jumlah">
+                            {{ $row->jumlah }}
+                        </td>
+                        <td data-label="Requested By">
+                            {{ $row->requestedBy->name ?? "-" }}
+                        </td>
+                        <td data-label="Kerusakan">
+                            {{ $row->kerusakan ?? "-" }}
+                        </td>
+                        <td data-label="Image">
+                            <img src="{{ asset("storage/" . $row->image) }}" class="img-fluid mb-3" style="max-height: 150px;">
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>

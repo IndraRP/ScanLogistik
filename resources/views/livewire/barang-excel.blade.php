@@ -5,7 +5,7 @@
         <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Import Barang via Excel</p>
     </div>
 
-    <a href="/BarangMasuk">
+    <a href="/">
         <div class="rounded-pill icon-wrapper d-flex justify-content-center align-items-center">
             <i class="bi bi-arrow-left-short icon"></i>
         </div>
@@ -22,7 +22,7 @@
             </button>
 
             <a href="{{ url("/download-template") }}" class="btn btn-success fs-7 mb-1 ms-2">
-                Download Excel
+                Download Template
             </a>
         </div>
 

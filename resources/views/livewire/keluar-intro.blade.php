@@ -1,7 +1,7 @@
 <div>
     <div class="d-flex align-items-center justify-content-center utama p-4" style="background-color: #5f6df5;">
         <i class="fa-solid fa-angle-left fs-3 mb-0 text-white"></i>
-        <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Barang Masuk</p>
+        <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Barang Keluar</p>
     </div>
 
     <a href="/">
@@ -12,23 +12,8 @@
 
     <div class="container py-4">
         <div class="row justify-content-center">
-
-            <!-- Scanner -->
-            <div class="col-6 col-md-3 text-center">
-                <a href="/ScanMasuk">
-
-                    <h4 class="fw-semibold text-decoration-underline mb-3">
-                        Scanner
-                    </h4>
-
-                    <div class="rounded-4 d-flex align-items-center justify-content-center gambar-wrapper mx-auto shadow" style="height:180px; cursor:pointer;">
-                        <img src="https://cdn-icons-png.flaticon.com/128/8848/8848876.png" class="gambar" alt="Scanner">
-                    </div>
-                </a>
-            </div>
-
             <div class="col-6 col-md-3 mt-md-0 mt-4 text-center">
-                <a href="/InputCode" class="text-decoration-none">
+                <a href="/InputCodeKeluar" class="text-decoration-none">
 
                     <h4 class="fw-semibold text-decoration-underline mb-3">
                         Input Code
@@ -40,16 +25,15 @@
                 </a>
             </div>
 
-            <!-- Excel Entry -->
-            <div class="col-6 col-md-3 mt-md-0 mt-4 text-center">
-                <a href="/barang-excel" class="text-decoration-none">
+            <div class="col-6 col-md-3 text-center">
+                <a href="/ScanKeluar" class="text-decoration-none">
 
                     <h4 class="fw-semibold text-decoration-underline mb-3">
-                        Import Excel
+                        Scan Keluar
                     </h4>
 
                     <div class="rounded-4 d-flex align-items-center justify-content-center gambar-wrapper mx-auto shadow" style="height:180px; cursor:pointer;">
-                        <img src="https://cdn-icons-png.flaticon.com/128/11689/11689828.png" class="gambar" alt="Manual Entry">
+                        <img src="https://cdn-icons-png.flaticon.com/128/18594/18594405.png" class="gambar" alt="Manual Entry">
                     </div>
                 </a>
             </div>
@@ -71,12 +55,6 @@
             background-color: rgb(213, 243, 255);
         }
 
-        .icon {
-            color: #5f6df5;
-            font-size: 35px;
-        }
-
-
         .gambar-wrapper {
             background-color: white;
         }
@@ -85,8 +63,13 @@
             background-color: rgb(213, 243, 255);
         }
 
+        .icon {
+            color: #5f6df5;
+            font-size: 35px;
+        }
+
         .gambar {
-            width: 70px;
+            width: 100px;
         }
 
         @media (max-width: 576px) {

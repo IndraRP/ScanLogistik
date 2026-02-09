@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class ScanIntro extends Component
+class NewMatIntro extends Component
 {
     public function mount()
     {
@@ -15,7 +15,7 @@ class ScanIntro extends Component
 
     public function render()
     {
-        return view('livewire.scan-intro')
+        return view('livewire.new-mat-intro')
             ->extends('layouts.app')
             ->section('content');
     }

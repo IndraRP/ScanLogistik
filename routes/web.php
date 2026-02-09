@@ -14,7 +14,10 @@ use App\Livewire\HistoryKeluar;
 use App\Livewire\HistoryMasuk;
 use App\Livewire\Home;
 use App\Livewire\InputCodeBarang;
+use App\Livewire\InputCodeKeluar;
+use App\Livewire\KeluarIntro;
 use App\Livewire\Logout;
+use App\Livewire\NewMatIntro;
 use App\Livewire\ScanBarcode;
 use App\Livewire\ScanIntro;
 use App\Livewire\ScanKeluar;
@@ -53,14 +56,19 @@ Route::get('/sign_up', SignUp::class)->name('sign_up');
 Route::get('/', Home::class)->name('home');
 
 Route::get('/BarangMasuk', BarangMasuk::class)->name('BarangMasuk');
-Route::get('/ScanIntro', ScanIntro::class)->name('ScanIntro');
+Route::get('/KeluarIntro', KeluarIntro::class)->name('KeluarIntro');
 
+Route::get('/AllBarang', AllBarang::class)->name('admin_all');
+
+Route::get('/NewMatIntro', NewMatIntro::class)->name('NewMatIntro');
 Route::get('/createbarang', CreateBarang::class)->name('create');
+
 Route::get('/barang-excel', BarangExcel::class)->name('barang-excel');
 Route::get('/ScanMasuk', ScanMasuk::class)->name('ScanMasuk');
 
-Route::get('/ScanKeluar', ScanKeluar::class)->name('ScanIntro');
+Route::get('/ScanKeluar', ScanKeluar::class)->name('ScanKeluar');
 Route::get('/InputCode', InputCodeBarang::class)->name('InputCodeBarang');
+Route::get('/InputCodeKeluar', InputCodeKeluar::class)->name('InputCodeKeluar');
 
 Route::get('/HistoryMasuk', HistoryMasuk::class)->name('HistoryMasuk');
 Route::get('/HistoryKeluar', HistoryKeluar::class)->name('HistoryKeluar');
