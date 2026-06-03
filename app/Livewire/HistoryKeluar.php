@@ -14,15 +14,21 @@ class HistoryKeluar extends Component
 {
     public $barangId;
     public $histories = [];
+    public $bulan;
 
     public function mount($barangId = null)
     {
         $this->barangId = $barangId;
+        $this->loadData();
+    }
 
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
+    public function filterData()
+    {
+        $this->loadData();
+    }
 
+    private function loadData()
+    {
         $query = StokHistory::query()
             ->with(['barang', 'requestedBy'])
             ->where('status', 'keluar')
@@ -30,6 +36,13 @@ class HistoryKeluar extends Component
 
         if ($this->barangId) {
             $query->where('barang_id', $this->barangId);
+        }
+
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                  ->whereMonth('created_at', $month);
         }
 
         $this->histories = $query->get();
@@ -49,6 +62,13 @@ class HistoryKeluar extends Component
             $query->where('barang_id', $this->barangId);
         }
 
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $month);
+        }
+
         $histories = $query->get();
 
         // Ambil barang (kalau single)
@@ -61,7 +81,7 @@ class HistoryKeluar extends Component
             'histories' => $histories,
         ])->setPaper('A4', 'landscape');
 
-        $fileName = 'History_Keluar_' . now()->format('Ymd_His') . '.pdf';
+        $fileName = 'History_Keluar_' . $this->bulan . '.pdf';
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
@@ -80,6 +100,13 @@ class HistoryKeluar extends Component
 
         if ($this->barangId) {
             $query->where('barang_id', $this->barangId);
+        }
+
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $month);
         }
 
         $histories = $query->get();
@@ -106,7 +133,7 @@ class HistoryKeluar extends Component
             $row++;
         }
 
-        $fileName = 'History_Keluar_' . now()->format('Ymd_His') . '.xlsx';
+        $fileName = 'History_Keluar_' . $this->bulan . '.xlsx';
         $tempPath = storage_path('app/' . $fileName);
 
         (new Xlsx($spreadsheet))->save($tempPath);

@@ -3,12 +3,29 @@
         <h3>History Masuk</h1>
 
             <div class="d-block d-md-flex ms-auto">
-                <button wire:click="exportExcel" class="btn btn-success">
-                    <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
+                <div class="p-3 me-3 bg-secondary text-white rounded-3">
+                    <label for="bdaymonth">Filter Month :</label>
+                    <input type="month" wire:model.live="bulan">
+                    <button wire:click="filterData"  wire:loading.attr="disabled" class="btn btn-primary">
+                        Filter
+                        <div wire:loading wire:target="filterData">
+                            Loading data...
+                        </div>
+                    </button>
+                </div>
+                
+                <button wire:click="exportExcel" wire:loading.attr="disabled" class="btn btn-success">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel 
+                    <div wire:loading wire:target="exportExcel">
+                        Loading data...
+                    </div>
                 </button>
 
                 <button wire:click="exportPdf" class="btn btn-danger ms-2">
                     <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                    <div wire:loading wire:target="exportPdf" wire:loading.attr="disabled">
+                        Loading data...
+                    </div>
                 </button>
             </div>
     </div>

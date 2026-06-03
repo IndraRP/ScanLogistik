@@ -13,16 +13,23 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class HistoryMasuk extends Component
 {
     public $barangId;
+    public $filter;    
     public $histories = [];
+    public $bulan;
 
     public function mount($barangId = null)
     {
         $this->barangId = $barangId;
+        $this->loadData();
+    }
 
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
+    public function filterData()
+    {
+        $this->loadData();
+    }
 
+    private function loadData()
+    {
         $query = StokHistory::query()
             ->with(['barang', 'requestedBy'])
             ->where('status', 'masuk')
@@ -30,6 +37,13 @@ class HistoryMasuk extends Component
 
         if ($this->barangId) {
             $query->where('barang_id', $this->barangId);
+        }
+
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                  ->whereMonth('created_at', $month);
         }
 
         $this->histories = $query->get();
@@ -49,9 +63,15 @@ class HistoryMasuk extends Component
             $query->where('barang_id', $this->barangId);
         }
 
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $month);
+        }
+
         $histories = $query->get();
 
-        // Ambil barang (kalau single)
         $barang = $this->barangId
             ? Barang::find($this->barangId)
             : null;
@@ -59,9 +79,10 @@ class HistoryMasuk extends Component
         $pdf = Pdf::loadView('exports.barang_history_pdf_masuk', [
             'barang' => $barang,
             'histories' => $histories,
+            'bulan' => $this->bulan,
         ])->setPaper('A4', 'landscape');
 
-        $fileName = 'History_Masuk_' . now()->format('Ymd_His') . '.pdf';
+        $fileName = 'History_Masuk_' . $this->bulan . '.pdf';
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
@@ -80,6 +101,13 @@ class HistoryMasuk extends Component
 
         if ($this->barangId) {
             $query->where('barang_id', $this->barangId);
+        }
+
+        if ($this->bulan) {
+            [$tahun, $month] = explode('-', $this->bulan);
+
+            $query->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $month);
         }
 
         $histories = $query->get();
@@ -106,7 +134,7 @@ class HistoryMasuk extends Component
             $row++;
         }
 
-        $fileName = 'History_Masuk_' . now()->format('Ymd_His') . '.xlsx';
+        $fileName = 'History_Masuk_' . $this->bulan . '.xlsx';
         $tempPath = storage_path('app/' . $fileName);
 
         (new Xlsx($spreadsheet))->save($tempPath);
