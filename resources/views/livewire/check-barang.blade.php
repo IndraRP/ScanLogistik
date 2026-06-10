@@ -226,10 +226,14 @@
                             </table>
                         </div>
 
-                        <div class="w-100 mt-3">
+                        <div class="w-100 mt-3 d-block d-md-flex">
                             <a href="{{ route("barang.export", $item->id) }}">
                                 <button class="btn btn-success w-100">Download/Export Excel</button>
                             </a>
+
+                            <button class="btn btn-warning ms-0 ms-md-3" wire:click="addHistory">
+                                Simpan di History
+                            </button>
                         </div>
                     @else
                         <p class="text-muted">

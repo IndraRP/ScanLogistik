@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Barang;
 use App\Models\StokHistory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -37,6 +38,48 @@ class CheckBarang extends Component
 
         if (!auth()->check()) {
             return redirect()->route('login');
+        }
+    }
+
+    public function addHistory()
+    {
+        if (empty($this->barangList)) {
+            $this->addError('selection', 'Tidak ada barang hasil scan.');
+            return;
+        }
+
+        // dd($this->barangList);
+
+        $messages = [];
+
+        foreach ($this->barangList as $item) {
+
+            $stockCode = $item->stock_code;
+            $barang = Barang::where('stock_code', $stockCode)->first();
+
+            if (!$barang) {
+                $this->addError("barang.{$stockCode}", 'Barang tidak ditemukan.');
+                continue;
+            }
+
+            try {
+                // Insert ke stok history
+                StokHistory::create([
+                    'barang_id'    => $barang->id,
+                    'jumlah'       => $barang->qty,
+                    'status'       => 'check',
+                    'requested_by' => Auth::id(),
+                ]);
+                $messages[] = "Stok Check berhasil disimpan di history.";
+            } catch (\Exception $e) {
+                Log::error('Add stock error: ' . $e->getMessage());
+                $this->addError("system.{$stockCode}", 'Gagal menambah stok.');
+            }
+        }
+
+        if (!empty($messages)) {
+            session()->flash('message', implode('<br>', $messages));
+            return redirect('/CheckBarang');
         }
     }
 

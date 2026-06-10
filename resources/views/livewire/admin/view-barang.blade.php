@@ -221,7 +221,11 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $history->created_at->format("d-m-Y H:i") }}</td>
                         <td>
-                            <span class="badge {{ $history->status === "masuk" ? "bg-success" : "bg-danger" }}">
+                            <span class="badge {{
+                                $history->status === 'masuk' ? 'bg-success' :
+                                ($history->status === 'keluar' ? 'bg-danger' :
+                                ($history->status === 'check' ? 'bg-warning' : 'bg-secondary'))
+                            }}">
                                 {{ ucfirst($history->status) }}
                             </span>
                         </td>
