@@ -6,8 +6,8 @@
     @endif
 
     <div class="d-flex justify-content-center">
-        <div class="rounded-4 d-flex justify-content-center align-items-center mt-md-5 mt-4 bg-white" style="width: 120px; height: 120px;">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIGt349U8QknkkKh3N9IuobSr8uJCymiDAaw&s" style="width: 100px; height: 100px;" alt="">
+        <div class="rounded-4 d-flex justify-content-center align-items-center mt-md-5 mt-4">
+            <img src="https://foto.ppsdmmigas.id/upload/2020/08/04/20200804143207-8f33d227.png" style="width: 130px; height: 130px;" alt="">
         </div>
     </div>
 

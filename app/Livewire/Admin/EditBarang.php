@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+
 class EditBarang extends Component
 {
     use WithFileUploads;
@@ -79,6 +82,8 @@ class EditBarang extends Component
             $imagePath = $this->old_image;
         }
 
+        $barcodePath = $this->generateQRCode($this->stock_code);
+
         $barang->update([
             'stock_code' => $this->stock_code,
             'part_number' => $this->part_number,
@@ -86,6 +91,7 @@ class EditBarang extends Component
             'nama_barang' => $this->nama_barang,
             'deskripsi' => $this->deskripsi,
             'image' => $imagePath,
+            'image_barcode' => $barcodePath,
             'note' => $this->note,
             'location' => $this->location,
             'warehouse' => $this->warehouse,
@@ -101,6 +107,22 @@ class EditBarang extends Component
         return redirect()->to('/AllBarang');
     }
 
+    public function generateQRCode($stockCode)
+    {
+        $filename = 'barcode_' . $stockCode . '.png';
+        $path = 'barcodes/' . $filename;
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($stockCode)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        Storage::disk('public')->put($path, $result->getString());
+
+        return $path;
+    }
 
     public function render()
     {
