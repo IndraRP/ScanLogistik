@@ -1,5 +1,5 @@
 <div class="bg-dark fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-primary">
+    <nav class="navbar navbar-expand-lg navbar-primary" style="background-color: #FFDE59">
         <div class="w-100 d-flex">
             @auth
                 <div class="dropdown">
@@ -8,8 +8,8 @@
                         <img src="{{ auth()->user()->avatar ? asset("storage/" . auth()->user()->avatar) : "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png" }}" class="rounded-pill border-dark border" style="width: 40px; height:40px; object-fit:cover" alt="User Avatar">
 
                         <div class="d-md-flex align-items-center d-block ms-3">
-                            <p class="fs-7-besar mb-0 text-white">Welcome</p>
-                            <p class="fs-7-respon ms-md-2 mb-0 ms-0 text-white">
+                            <p class="fs-7-besar mb-0 text-dark">Welcome</p>
+                            <p class="fs-7-respon ms-md-2 mb-0 ms-0 text-dark">
                                 {{ auth()->user()->name }}!
                             </p>
                         </div>
@@ -39,7 +39,7 @@
 
             @guest
                 <div class="d-flex align-items-center">
-                    <a class="navbar-brand fw-bolder text-white" href="{{ route("login") }}">
+                    <a class="navbar-brand fw-bolder text-dark" href="{{ route("login") }}">
                         Login
                     </a>
                 </div>
@@ -47,11 +47,11 @@
 
             <div class="w-100 d-flex align-items-center">
                 <a href="/" class="text-decoration-none ms-auto">
-                    <p class="mb-0 text-white">Home</p>
+                    <p class="mb-0 text-dark">Home</p>
                 </a>
 
                 <a href="/AllBarang" class="text-decoration-none ms-4">
-                    <p class="mb-0 text-white">Barang</p>
+                    <p class="mb-0 text-dark">Barang</p>
                 </a>
             </div>
             {{-- <div class="search-wrapper mb-1 mt-2">

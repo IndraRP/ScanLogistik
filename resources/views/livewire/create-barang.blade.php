@@ -1,5 +1,5 @@
 <div class="">
-    <div class="d-flex align-items-center justify-content-center utama p-4" style="background-color: #5f6df5;">
+    <div class="d-flex align-items-center justify-content-center utama p-4 bg-warning">
         <i class="fa-solid fa-angle-left fs-3 mb-0 text-white"></i>
         <p class="fw-semibold fs-4 mb-0 ms-4 text-center text-white">Input Barang</p>
     </div>
